@@ -252,3 +252,11 @@ class RingAttention(Module):
         self.heads = heads
         self.scale = dim_head ** -0.5
         self.causal = causal
+        assert divisible_by(ring_seq_size, bucket_size)
+
+        self.ring_attn = ring_attn
+        self.max_lookback_seq_len = max_lookback_seq_len
+        self.striped_ring_attn = striped_ring_attn
+
+        self.force_regular_attn = force_regular_attn
+        self.auto_shard_seq = default(auto_shard_seq, ring_attn) # this should be done at the transformer level on the token ids for efficiency, but for testing purposes
